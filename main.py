@@ -1,30 +1,78 @@
-# create word suggestion algorithm that puts a value on each word based on how popular its letters are
+from letter_value import alphabet, letter_values_for_wordle_and_wordus
 
-with open("answers.txt", "r") as answers:
-    # store the possible answers into a list
-    wordle_words = answers.read().splitlines()
 
-with open("allowed_guesses.txt", "r") as allowed_guesses:
-    # add the allowed guesses into the list (because Wordus supports these words)
-    wordus_words = allowed_guesses.read().splitlines()
+def suggest_best_word(database, wordle_words):
+    # suggest the best word to use
+    best_word = "crane"
+    if attempt > 0:
+        word_values = []
+        copied_database = database.copy()
 
-word_database = wordle_words + wordus_words
-valid_letters = []
-answer_found = False
+        # only suggest official wordle words
+        for word in database:
+            if word not in wordle_words:
+                copied_database.remove(word)
+        if len(copied_database) > 0:
+            database = copied_database.copy()
+        else:
+            copied_database = database.copy()
+
+        # get rid of words with duplicate letters and save to copied_database
+        for word in database:
+            for letter in word:
+                if word.count(letter) > 1:
+                    copied_database.remove(word)
+                    break
+
+        # assign each word a value based on its letters
+        for word in copied_database:
+            value = 0
+            for letter in word:
+                value += letter_values_for_wordle_and_wordus[alphabet.index(letter)]
+            word_values.append(value)
+
+        if len(copied_database) > 0:
+            # choose the best word to use that doesn't have duplicate letters
+            best_word = copied_database[word_values.index(max(word_values))]
+        else:  # if all words have duplicate letters
+            # re-do the process using the actual database
+            word_values = []
+            for word in database:
+                value = 0
+                for letter in word:
+                    value += letter_values_for_wordle_and_wordus[alphabet.index(letter)]
+                word_values.append(value)
+            best_word = database[word_values.index(max(word_values))]
+
+    print("best word to try: " + best_word)
+    print()
+
 
 print()
 print("Welcome to WordleSolver!")
 print()
-print("Best starter - crane")
-print("Best follow-up - sloth")
-print()
 
-for _ in range(6):
+with open("assets/answers.txt", "r") as answers:
+    # store the possible answers into a list
+    wordle_words = answers.read().splitlines()
+
+with open("assets/allowed_guesses.txt", "r") as allowed_guesses:
+    # add the allowed guesses into the list (because Wordus supports these words)
+    wordus_words = allowed_guesses.read().splitlines()
+
+word_database = wordle_words + wordus_words
+
+valid_letters = []
+answer_found = False
+
+for attempt in range(6):
     if answer_found:
         break
 
-    used_word = input("Enter used word: ")
-    result = input("Enter result: ")
+    suggest_best_word(word_database, wordle_words)
+
+    used_word = input("enter used word: ")
+    result = input("enter result: ")
 
     for i in range(5):
         letter = used_word[i]
@@ -78,33 +126,7 @@ for _ in range(6):
         elif word in wordus_words:
             from_wordus.append(word)
 
+    print()
     print(from_wordle)
     print(from_wordus)
-    print()
-
-    # suggest a word to try
-    count = 0
-    for word in word_database:
-        if count == 2:
-            break
-
-        if word == word_database[-1]:
-            print("    The Answer is", word)
-            answer_found = True
-            break
-
-        duplicate_letter_exists = False
-        for letter in word:
-            if word.count(letter) > 1:
-                duplicate_letter_exists = True
-                break
-
-        if not duplicate_letter_exists:
-            # prioritize words used by wordle
-            if word in wordle_words:
-                print("    Suggestion", count + 1, "-", word)
-            elif word in wordus_words:
-                print("    Suggestion", count + 1, "-", word)
-            count += 1
-            continue
     print()

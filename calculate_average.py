@@ -1,26 +1,72 @@
 import random
+from letter_value import alphabet, wordle_words, letter_values_for_wordle_and_wordus
 
-failure = 0
+
+def suggest_best_word(database, wordle_words):
+    # suggest the best word to use
+    best_word = "crane"
+    if attempt > 0:
+        word_values = []
+        copied_database = database.copy()
+
+        # only suggest official wordle words
+        for word in database:
+            if word not in wordle_words:
+                copied_database.remove(word)
+        if len(copied_database) > 0:
+            database = copied_database.copy()
+        else:
+            copied_database = database.copy()
+
+        # get rid of words with duplicate letters and save to copied_database
+        for word in database:
+            for letter in word:
+                if word.count(letter) > 1:
+                    copied_database.remove(word)
+                    break
+
+        # assign each word a value based on its letters
+        for word in copied_database:
+            value = 0
+            for letter in word:
+                value += letter_values_for_wordle_and_wordus[alphabet.index(letter)]
+            word_values.append(value)
+
+        if len(copied_database) > 0:
+            # choose the best word to use that doesn't have duplicate letters
+            best_word = copied_database[word_values.index(max(word_values))]
+        else:  # if all words have duplicate letters
+            # re-do the process using the actual database
+            word_values = []
+            for word in database:
+                value = 0
+                for letter in word:
+                    value += letter_values_for_wordle_and_wordus[alphabet.index(letter)]
+                word_values.append(value)
+            best_word = database[word_values.index(max(word_values))]
+
+    return best_word
+
+
 total = 0
-repeat = 50
+failure = 0
+repeat = 1000
 for loop in range(repeat):
+    print("Running:", loop + 1, end="\r")
     with open("answers.txt", "r") as answers:
         # store the possible answers into a list
         word_database = answers.read().splitlines()
 
     word_of_the_day = random.choice(word_database)
-    used_word = "crane"
-    if loop == 1:
-        used_word = "sloth"
 
     valid_letters = []
     for attempt in range(6):
-        used_word = word_database[0]
+        current_word = suggest_best_word(word_database, wordle_words)
 
         # create results for guess
         result = ""
         for i in range(5):
-            letter = used_word[i]
+            letter = current_word[i]
             if letter == word_of_the_day[i]:
                 result += "o"
             elif letter in word_of_the_day:
@@ -34,13 +80,13 @@ for loop in range(repeat):
             break
 
         for i in range(5):
-            letter = used_word[i]
+            letter = current_word[i]
             outcome = result[i]
             if outcome != "x":
                 valid_letters.append(letter)
 
         for i in range(5):
-            letter = used_word[i]
+            letter = current_word[i]
             outcome = result[i]
             duplicated_word_database = word_database.copy()
 
