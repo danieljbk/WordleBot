@@ -1,3 +1,5 @@
+# create word suggestion algorithm that puts a value on each word based on how popular its letters are
+
 with open("answers.txt", "r") as answers:
     # store the possible answers into a list
     wordle_words = answers.read().splitlines()
@@ -8,12 +10,19 @@ with open("allowed_guesses.txt", "r") as allowed_guesses:
 
 word_database = wordle_words + wordus_words
 valid_letters = []
+answer_found = False
 
-print("Suggested word: " + "crane")
-print("Suggested word: " + "later")
-print("Suggested word: " + "irate")
+print()
+print("Welcome to WordleSolver!")
+print()
+print("Best starter - crane")
+print("Best follow-up - sloth")
+print()
 
 for _ in range(6):
+    if answer_found:
+        break
+
     used_word = input("Enter used word: ")
     result = input("Enter result: ")
 
@@ -60,24 +69,28 @@ for _ in range(6):
                     if word in word_database:
                         word_database.remove(word)
 
-    print(word_database)
+    # separate word_database into wordle words and wordus words (for printing only)
+    from_wordle = []
+    from_wordus = []
+    for word in word_database:
+        if word in wordle_words:
+            from_wordle.append(word)
+        elif word in wordus_words:
+            from_wordus.append(word)
+
+    print(from_wordle)
+    print(from_wordus)
+    print()
 
     # suggest a word to try
     count = 0
     for word in word_database:
-        if count == 3:
+        if count == 2:
             break
 
-        if word in wordle_words:
-            print("Suggested word (wordle): " + word)
-            count += 1
-            continue
-
-    # if the word is not in the wordle database,
-    # suggest a word from the wordus database instead
-    # that does not have duplicate letters
-    for word in word_database:
-        if count == 3:
+        if word == word_database[-1]:
+            print("    The Answer is", word)
+            answer_found = True
             break
 
         duplicate_letter_exists = False
@@ -86,7 +99,12 @@ for _ in range(6):
                 duplicate_letter_exists = True
                 break
 
-        if not duplicate_letter_exists or word == word_database[-1]:
-            print("Suggested word (wordus): " + word)
+        if not duplicate_letter_exists:
+            # prioritize words used by wordle
+            if word in wordle_words:
+                print("    Suggestion", count + 1, "-", word)
+            elif word in wordus_words:
+                print("    Suggestion", count + 1, "-", word)
             count += 1
             continue
+    print()

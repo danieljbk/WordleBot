@@ -3,13 +3,15 @@ import random
 failure = 0
 total = 0
 repeat = 50
-for _ in range(repeat):
+for loop in range(repeat):
     with open("answers.txt", "r") as answers:
         # store the possible answers into a list
         word_database = answers.read().splitlines()
 
     word_of_the_day = random.choice(word_database)
     used_word = "crane"
+    if loop == 1:
+        used_word = "sloth"
 
     valid_letters = []
     for attempt in range(6):
