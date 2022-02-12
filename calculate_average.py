@@ -50,10 +50,10 @@ def suggest_best_word(database, wordle_words):
 
 total = 0
 failure = 0
-repeat = 1000
+repeat = 100
 for loop in range(repeat):
     print("Running:", loop + 1, end="\r")
-    with open("answers.txt", "r") as answers:
+    with open("assets/answers.txt", "r") as answers:
         # store the possible answers into a list
         word_database = answers.read().splitlines()
 
