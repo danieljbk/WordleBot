@@ -31,7 +31,8 @@ def filter_wordle_words(database, wordle_words):
         if word not in wordle_words:
             copied_database.remove(word)
 
-    if not copied_database:  # if no wordle words exist, revert to the original database
+    # if no wordle words exist, revert to the original database
+    if not copied_database:
         return database
 
     # otherwise, return the new database

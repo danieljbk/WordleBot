@@ -1,24 +1,15 @@
-from absolute_path import absolute_path
-from letter_values import letter_values
+from assign_letter_values import letter_values
 from suggest_best_word import suggest_best_word
+from read_words import wordle_words, wordus_words
 
 
 print()
-print("Welcome to WordleSolver!")
+print("Welcome to WordleSolver! This Program will suggest the best word to use.")
 print()
-
-with open(absolute_path("assets/answers.txt"), "r") as answers:
-    # store the possible answers into a list
-    wordle_words = answers.read().splitlines()
-
-with open(absolute_path("assets/allowed_guesses.txt"), "r") as allowed_guesses:
-    # add the allowed guesses into the list (because Wordus supports these words)
-    wordus_words = allowed_guesses.read().splitlines()
-
-word_database = wordle_words + wordus_words
 
 valid_letters = []
 answer_found = False
+word_database = wordle_words + wordus_words
 
 for attempt in range(6):
     if answer_found:
