@@ -18,7 +18,6 @@ for loop in range(times_repeated):
     # run my code against the official wordle game, not the wordus game
     word_of_the_day = random.choice(wordle_words)
 
-    valid_letters = []
     for attempt in range(6):
         current_word = suggest_best_word(
             attempt,
@@ -27,7 +26,7 @@ for loop in range(times_repeated):
             letter_values,
         )
 
-        # calculate results for the guessed word
+        # identify the result for the guessed word
         result = ""
         for i in range(5):
             letter = current_word[i]
@@ -50,7 +49,8 @@ for loop in range(times_repeated):
 
         if attempt == 5:  # if you reach this point on the last attempt, YOU LOST!
             failed_games += 1
+            break
 
-# Ignore the times the algorithm failed
+# Calculate the average number of guesses while ignoring the times the algorithm failed
 print("Average:", round(total_guesses / (times_repeated - failed_games), 2))
 print("Failed:", failed_games, "times")
