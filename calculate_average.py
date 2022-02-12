@@ -2,6 +2,7 @@ import random
 from assign_letter_values import letter_values
 from suggest_best_word import suggest_best_word
 from read_words import wordle_words, wordus_words
+from analyze_result import analyze_result_and_update_database
 
 
 total_guesses = 0
@@ -41,50 +42,13 @@ for loop in range(times_repeated):
             total_guesses += attempt + 1
             break
 
-        for i in range(5):
-            letter = current_word[i]
-            outcome = result[i]
-            if outcome != "x":
-                valid_letters.append(letter)
+        word_database = analyze_result_and_update_database(
+            current_word,
+            result,
+            word_database,
+        )
 
-        for i in range(5):
-            letter = current_word[i]
-            outcome = result[i]
-            duplicated_word_database = word_database.copy()
-
-            # if the letter was in the word and in the right place...
-            if outcome == "o":
-                for word in duplicated_word_database:
-                    if word[i] != letter:
-                        if word in word_database:
-                            word_database.remove(word)
-
-            # if the letter was in the word but in the wrong place...
-            elif outcome == "p":
-                for word in duplicated_word_database:
-                    # if the word doesn't have this letter...
-                    if letter not in word:
-                        if word in word_database:
-                            word_database.remove(word)
-                    # if the word has this letter in the specific location...
-                    if word[i] == letter:
-                        if word in word_database:
-                            word_database.remove(word)
-
-            # if the letter was not in the word...
-            elif outcome == "x":
-                for word in duplicated_word_database:
-                    # if the letter is a duplicate,
-                    # remove words with this letter in this specific place
-                    if letter in valid_letters:
-                        if word[i] == letter:
-                            if word in word_database:
-                                word_database.remove(word)
-                    elif letter in word:
-                        if word in word_database:
-                            word_database.remove(word)
-
-        if attempt == 5:  # if you reach this point on attempt #5, YOU LOST!
+        if attempt == 5:  # if you reach this point on the last attempt, YOU LOST!
             failed_games += 1
 
 # Ignore the times the algorithm failed
