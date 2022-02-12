@@ -25,8 +25,7 @@ for attempt in range(6):
         + "\n"
         + "What Word Did You Use? Type your answer in lowercase.\n"
         + "\n"
-        + f"[Example: '{best_word}']"
-        + "\n"
+        + f"[Example: '{best_word}']\n"
         + "- "
     )
 
