@@ -1,5 +1,12 @@
+import os
 import random
 from letter_value import alphabet, wordle_words, letter_values_for_wordle_and_wordus
+
+
+def absolute_path(path):
+    dirname = os.path.dirname(__file__)
+
+    return os.path.join(dirname, path)
 
 
 def suggest_best_word(database, wordle_words):
@@ -53,7 +60,7 @@ failure = 0
 repeat = 100
 for loop in range(repeat):
     print("Running:", loop + 1, end="\r")
-    with open("assets/answers.txt", "r") as answers:
+    with open(absolute_path("assets/answers.txt"), "r") as answers:
         # store the possible answers into a list
         word_database = answers.read().splitlines()
 

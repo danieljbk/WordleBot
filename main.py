@@ -1,4 +1,11 @@
+import os
 from letter_value import alphabet, letter_values_for_wordle_and_wordus
+
+
+def absolute_path(path):
+    dirname = os.path.dirname(__file__)
+
+    return os.path.join(dirname, path)
 
 
 def suggest_best_word(database, wordle_words):
@@ -52,11 +59,11 @@ print()
 print("Welcome to WordleSolver!")
 print()
 
-with open("assets/answers.txt", "r") as answers:
+with open(absolute_path("assets/answers.txt"), "r") as answers:
     # store the possible answers into a list
     wordle_words = answers.read().splitlines()
 
-with open("assets/allowed_guesses.txt", "r") as allowed_guesses:
+with open(absolute_path("assets/allowed_guesses.txt"), "r") as allowed_guesses:
     # add the allowed guesses into the list (because Wordus supports these words)
     wordus_words = allowed_guesses.read().splitlines()
 
