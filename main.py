@@ -1,58 +1,6 @@
-import os
-from letter_value import alphabet, letter_values_for_wordle_and_wordus
-
-
-def absolute_path(path):
-    dirname = os.path.dirname(__file__)
-
-    return os.path.join(dirname, path)
-
-
-def suggest_best_word(database, wordle_words):
-    # suggest the best word to use
-    best_word = "crane"
-    if attempt > 0:
-        word_values = []
-        copied_database = database.copy()
-
-        # only suggest official wordle words
-        for word in database:
-            if word not in wordle_words:
-                copied_database.remove(word)
-        if len(copied_database) > 0:
-            database = copied_database.copy()
-        else:
-            copied_database = database.copy()
-
-        # get rid of words with duplicate letters and save to copied_database
-        for word in database:
-            for letter in word:
-                if word.count(letter) > 1:
-                    copied_database.remove(word)
-                    break
-
-        # assign each word a value based on its letters
-        for word in copied_database:
-            value = 0
-            for letter in word:
-                value += letter_values_for_wordle_and_wordus[alphabet.index(letter)]
-            word_values.append(value)
-
-        if len(copied_database) > 0:
-            # choose the best word to use that doesn't have duplicate letters
-            best_word = copied_database[word_values.index(max(word_values))]
-        else:  # if all words have duplicate letters
-            # re-do the process using the actual database
-            word_values = []
-            for word in database:
-                value = 0
-                for letter in word:
-                    value += letter_values_for_wordle_and_wordus[alphabet.index(letter)]
-                word_values.append(value)
-            best_word = database[word_values.index(max(word_values))]
-
-    print("best word to try: " + best_word)
-    print()
+from absolute_path import absolute_path
+from letter_values import letter_values
+from suggest_best_word import suggest_best_word
 
 
 print()
@@ -76,7 +24,14 @@ for attempt in range(6):
     if answer_found:
         break
 
-    suggest_best_word(word_database, wordle_words)
+    best_word = suggest_best_word(
+        attempt,
+        word_database,
+        wordle_words,
+        letter_values,
+    )
+    print("best word to try: " + best_word)
+    print()
 
     used_word = input("enter used word: ")
     result = input("enter result: ")
