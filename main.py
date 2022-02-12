@@ -4,9 +4,9 @@ from read_words import wordle_words, wordus_words
 from analyze_result import analyze_result_and_update_database
 
 
-print()
-print("Welcome to WordleSolver! This Program will suggest the best word to use.")
-print()
+spacer = "\n\n" + "-" * 80 + "\n\n"
+print(spacer)
+print("Welcome to WordleSolver! I will suggest the best word for you to try.")
 
 word_database = wordle_words + wordus_words
 
@@ -17,12 +17,41 @@ for attempt in range(6):
         wordle_words,
         letter_values,
     )
-    print("the best word to try is: " + best_word)
-    print()
+
+    print(spacer + "\n" + "** The Best Word to Try: " + "'" + best_word + "'")
+
+    used_word = input(
+        spacer
+        + "\n"
+        + "What Word Did You Use? Type your answer in lowercase.\n"
+        + "\n"
+        + f"[Example: '{best_word}']"
+        + "\n"
+        + "- "
+    )
+
+    result = input(
+        spacer
+        + "\n"
+        + "And, What Was The Result?\n"
+        + "\n"
+        + "Type 'x' for grey (wrong),\n"
+        + "     'p' for orange (possible),\n"
+        + " and 'o' for green (correct).\n"
+        + "\n"
+        + "[Example: 'oxpxo']\n"
+        + "- "
+    )
+
+    if result == "ooooo":  # YOU WON!
+        print(spacer)
+        print("We did it!")
+        print("\n")
+        break
 
     word_database = analyze_result_and_update_database(
-        input("what word did you use?: "),
-        input("what was the result?: "),
+        used_word,
+        result,
         word_database,
     )
 
@@ -34,7 +63,15 @@ for attempt in range(6):
         elif word in wordus_words:
             from_wordus.append(word)
 
+    print(spacer)
+    print("REMAINING WORDS:")
     print()
-    print(from_wordle)
-    print(from_wordus)
+    print("- From Wordle:", from_wordle)
     print()
+    print("- From Wordus:", from_wordus)
+
+    if attempt == 5:  # if you reach this point on the last attempt, YOU LOST!
+        print(spacer)
+        print("I'm sorry... My failure rate is around 1%.")
+        print("\n")
+        break
