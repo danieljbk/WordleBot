@@ -54,7 +54,7 @@ def assign_word_values(database, letter_values):
 def suggest_best_word(attempt, database, wordle_words, letter_values):
     # suggest the best word to use
     if attempt == 0:
-        best_word = "crane"
+        best_word = "slane"
     else:
         database = filter_wordle_words(database, wordle_words)
         database = filter_words_with_duplicate_letters(database)
