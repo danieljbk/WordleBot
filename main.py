@@ -1,4 +1,4 @@
-from assign_letter_values import letter_values
+from assign_letter_values import assign_letter_values
 from suggest_best_word import suggest_best_word
 from read_words import wordle_words, wordus_words
 from analyze_result import analyze_result_and_update_database
@@ -8,14 +8,11 @@ spacer = "\n\n" + "-" * 80 + "\n\n"
 print(spacer)
 print("Welcome to WordleSolver! I will suggest the best word for you to try.")
 
-word_database = wordle_words + wordus_words
+word_database = wordle_words
 
 for attempt in range(6):
     best_word = suggest_best_word(
-        attempt,
-        word_database,
-        wordle_words,
-        letter_values,
+        attempt, word_database, wordle_words, assign_letter_values(word_database),
     )
 
     print(spacer + "\n" + "** The Best Word to Try: " + "'" + best_word + "'")
@@ -49,9 +46,7 @@ for attempt in range(6):
         break
 
     word_database = analyze_result_and_update_database(
-        used_word,
-        result,
-        word_database,
+        used_word, result, word_database,
     )
 
     # separate word_database into wordle words and wordus words (for printing only)

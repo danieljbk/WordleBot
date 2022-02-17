@@ -1,5 +1,5 @@
 import random
-from assign_letter_values import letter_values
+from assign_letter_values import assign_letter_values
 from suggest_best_word import suggest_best_word
 from read_words import wordle_words, wordus_words
 from analyze_result import analyze_result_and_update_database
@@ -20,10 +20,7 @@ for loop in range(times_repeated):
 
     for attempt in range(6):
         current_word = suggest_best_word(
-            attempt,
-            word_database,
-            wordle_words,
-            letter_values,
+            attempt, word_database, wordle_words, assign_letter_values(word_database),
         )
 
         # identify the result for the guessed word
@@ -42,9 +39,7 @@ for loop in range(times_repeated):
             break
 
         word_database = analyze_result_and_update_database(
-            current_word,
-            result,
-            word_database,
+            current_word, result, word_database,
         )
 
         if attempt == 5:  # if you reach this point on the last attempt, YOU LOST!
