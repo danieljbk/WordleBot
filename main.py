@@ -8,7 +8,12 @@ spacer = "\n\n" + "-" * 80 + "\n\n"
 print(spacer)
 print("Welcome to WordleSolver! I will suggest the best word for you to try.")
 
-word_database = wordle_words
+print(spacer)
+if input("Would you like to use the official Wordle database? (y/n): ") == "y":
+    word_database = wordle_words.copy()
+else:
+    word_database = wordle_words + wordus_words
+
 
 for attempt in range(6):
     best_word = suggest_best_word(
@@ -64,8 +69,8 @@ for attempt in range(6):
     print()
     print("- From Wordus:", from_wordus)
 
-    if attempt == 5:  # if you reach this point on the last attempt, YOU LOST!
+    if attempt == 5 or len(word_database) == 0:  # if you reach this point on the last attempt, YOU LOST!
         print(spacer)
-        print("I'm sorry... My failure rate is around 1%.")
+        print("I'm sorry... My failure rate is less than 1%.")
         print("\n")
         break

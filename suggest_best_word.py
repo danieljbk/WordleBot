@@ -44,8 +44,8 @@ def assign_word_values(database, letter_values):
     word_values = []
     for word in database:
         value = 0
-        for letter in word:
-            value += letter_values[string.ascii_lowercase.index(letter)]
+        for i in range(len(word)):
+            value += letter_values[i][string.ascii_lowercase.index(word[i])]
         word_values.append(value)
 
     return word_values

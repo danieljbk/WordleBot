@@ -13,7 +13,7 @@ for loop in range(times_repeated):
     print("Running:", loop + 1, end="\r")
 
     # guess from wordus words as well as wordle words
-    word_database = wordle_words + wordus_words
+    word_database = wordle_words.copy()
 
     # run my code against the official wordle game, not the wordus game
     word_of_the_day = random.choice(wordle_words)
