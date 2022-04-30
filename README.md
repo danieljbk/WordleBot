@@ -1,5 +1,5 @@
-# WordleSolver
-Wordle Bot that averages 3.6 guesses with a failure rate of less than 1%.
+# WordleBot
+Wordle word suggester that averages 3.6 guesses with a failure rate of less than 1%.
 
 ## To Use:
 
